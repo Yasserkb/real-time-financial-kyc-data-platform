@@ -1,0 +1,32 @@
+name: kyc_silver_events_suite
+expectations:
+  - expectation_type: expect_column_values_to_not_be_null
+    kwargs:
+      column: event_id
+  - expectation_type: expect_column_values_to_be_unique
+    kwargs:
+      column: event_id
+  - expectation_type: expect_column_values_to_not_be_null
+    kwargs:
+      column: tenant_id
+  - expectation_type: expect_column_values_to_be_in_set
+    kwargs:
+      column: event_type
+      value_set:
+        - CUSTOMER_ONBOARDED
+        - DOCUMENT_UPLOADED
+        - DOCUMENT_CONTROL_COMPLETED
+        - IDENTITY_VERIFICATION_COMPLETED
+        - WATCHLIST_SCREENING_COMPLETED
+        - RISK_SCORE_UPDATED
+        - CASE_DECISIONED
+  - expectation_type: expect_column_values_to_be_between
+    kwargs:
+      column: risk_score
+      min_value: 0
+      max_value: 100
+      mostly: 1.0
+meta:
+  owner: data-platform
+  domain: financial-kyc
+  severity: high
