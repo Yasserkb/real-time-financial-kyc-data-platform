@@ -1,0 +1,33 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Env
+.env
+.env.local
+
+# dbt
+dbt_kyc/target/
+dbt_kyc/dbt_packages/
+dbt_kyc/logs/
+dbt_kyc/*.duckdb
+dbt_kyc/*.duckdb.wal
+
+# Spark / local lakehouse
+spark-warehouse/
+data/
+tmp/
+*.checkpoint/
+checkpoints/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Logs
+*.log
