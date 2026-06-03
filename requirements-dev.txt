@@ -1,0 +1,8 @@
+confluent-kafka==2.6.1
+jsonschema==4.23.0
+pytest==8.3.3
+ruff==0.7.2
+pyspark==3.5.3
+delta-spark==3.2.1
+dbt-core==1.8.8
+dbt-duckdb==1.8.4

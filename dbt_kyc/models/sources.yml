@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: raw_kyc
+    schema: "{{ 'main_raw' if target.type == 'duckdb' else 'raw' }}"
+    tables:
+      - name: silver_kyc_events
+        description: Normalized Silver events from Spark lakehouse layer. In the local DuckDB profile this table is created from the sample seed.
+        columns:
+          - name: event_id
+            data_tests: [not_null, unique]
+          - name: tenant_id
+            data_tests: [not_null]
+          - name: customer_id
+            data_tests: [not_null]

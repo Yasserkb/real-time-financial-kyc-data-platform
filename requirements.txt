@@ -1,0 +1,4 @@
+confluent-kafka==2.6.1
+jsonschema==4.23.0
+pyspark==3.5.3
+delta-spark==3.2.1

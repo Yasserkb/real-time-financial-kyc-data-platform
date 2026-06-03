@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: Current customer dimension with KYC risk posture.
+    columns:
+      - name: customer_sk
+        tests: [not_null, unique]
+      - name: customer_risk_band
+        tests:
+          - accepted_values:
+              values: [LOW, MEDIUM, HIGH, CRITICAL]
+  - name: fact_kyc_events
+    description: Fact table for KYC lifecycle events.
+    columns:
+      - name: event_id
+        tests: [not_null, unique]
+      - name: customer_sk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_sk
+  - name: mart_tenant_kyc_risk_daily
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [tenant_id, event_date]

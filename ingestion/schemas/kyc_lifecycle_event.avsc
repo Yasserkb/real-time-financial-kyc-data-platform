@@ -1,0 +1,17 @@
+{
+  "type": "record",
+  "name": "KycLifecycleEvent",
+  "namespace": "com.yasserkoubachi.kyc",
+  "fields": [
+    { "name": "event_id", "type": "string" },
+    { "name": "event_type", "type": "string" },
+    { "name": "event_version", "type": "int", "default": 1 },
+    { "name": "tenant_id", "type": "string" },
+    { "name": "customer_id", "type": "string" },
+    { "name": "correlation_id", "type": ["null", "string"], "default": null },
+    { "name": "occurred_at", "type": { "type": "long", "logicalType": "timestamp-millis" } },
+    { "name": "produced_at", "type": { "type": "long", "logicalType": "timestamp-millis" } },
+    { "name": "payload", "type": "string" },
+    { "name": "metadata", "type": "string" }
+  ]
+}
