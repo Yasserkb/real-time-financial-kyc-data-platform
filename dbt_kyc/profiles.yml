@@ -1,0 +1,7 @@
+kyc_analytics:
+  target: local
+  outputs:
+    local:
+      type: duckdb
+      path: kyc_analytics.duckdb
+      threads: 4
