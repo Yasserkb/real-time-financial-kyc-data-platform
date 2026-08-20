@@ -22,6 +22,8 @@ The platform covers:
 - Airflow DAGs for reconciliation and dbt orchestration;
 - local-first Docker Compose stack with production extension points for AWS S3 and Snowflake.
 
+Implementation claims are mapped in [current state](docs/current-state.md), [gap analysis](docs/gap-analysis.md), and [known limitations](docs/known-limitations.md). Silver processing uses event-time watermarking and tenant/event ID deduplication; rejected records are retained in a dedicated quarantine Delta path with a quality reason.
+
 ## Architecture
 
 ```mermaid
@@ -232,7 +234,8 @@ The lakehouse layers are organized as:
 | Layer | Purpose |
 | --- | --- |
 | Bronze | Raw immutable events from Kafka-compatible ingestion |
-| Silver | Validated, normalized and quality-tagged KYC events |
+| Silver | Validated, normalized, event-time deduplicated KYC events |
+| Quarantine | Invalid events retained with their quality failure reason |
 | Gold | Customer-risk snapshots and tenant-level operational marts |
 | dbt marts | BI-ready facts, dimensions, daily marts and snapshots |
 

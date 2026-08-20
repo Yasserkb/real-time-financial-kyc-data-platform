@@ -91,3 +91,11 @@ def test_customer_risk_snapshot_flags_watchlist_match(spark: SparkSession) -> No
 
     assert row.has_confirmed_watchlist_match == 1
     assert row.customer_risk_band == "CRITICAL"
+
+
+def test_invalid_record_keeps_a_quarantine_reason(spark: SparkSession) -> None:
+    event = build_customer_journey()[0]
+    event["tenant_id"] = None
+    row = normalize_bronze_events(_events_df(spark, [event])).collect()[0]
+    assert row.is_valid == "false"
+    assert row.quality_error == "missing_tenant_id"
