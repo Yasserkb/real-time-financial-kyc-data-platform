@@ -1,0 +1,60 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Lint
+        run: ruff check ingestion spark_jobs tests
+      - name: Unit tests
+        run: pytest -q tests/test_event_factory.py tests/test_spark_transformations.py
+
+      - name: Validate checked-in event examples and schemas
+        run: python -m json.tool ingestion/schemas/kyc_event.schema.json > /dev/null
+
+  dbt-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install dbt
+        run: pip install dbt-core==1.8.8 dbt-duckdb==1.8.4
+      - name: dbt seed and build
+        working-directory: dbt_kyc
+        run: |
+          DBT_PROFILES_DIR=. dbt deps
+          DBT_PROFILES_DIR=. dbt seed --target local
+          DBT_PROFILES_DIR=. dbt build --target local
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan dependencies, configuration and secrets
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret,misconfig
+          severity: HIGH,CRITICAL
+          exit-code: "1"
